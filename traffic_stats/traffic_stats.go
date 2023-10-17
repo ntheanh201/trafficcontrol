@@ -620,7 +620,8 @@ func calcDailyMaxGbps(client influx.Client, bp influx.BatchPoints, startTime tim
 						continue
 					}
 					value = value / kilobitsToGigabits
-					statTime, _ := time.Parse(time.RFC3339, t)
+					layout := "2006-01-02 15:04:05-07"
+					statTime, _ := time.Parse(layout, t)
 					infof("max gbps for cdn %v = %v", cdn, value)
 					var statsSummary tc.StatsSummaryV5
 					statsSummary.CDNName = util.StrPtr(cdn)
