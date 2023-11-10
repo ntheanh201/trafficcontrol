@@ -65,7 +65,7 @@ def test_cache_group_contract(to_session: TOSession,
 		cache_group_response_template = response_template_data.get("cachegroup")
 
 		# validate cachegroup values from prereq data in cachegroup get response.
-		keys = ["name", "shortName", "fallbackToClosest", "typeId"]
+		keys = ["name", "fallbackToClosest", "typeId"]
 		prereq_values = [cache_group_post_data[key] for key in keys]
 		get_values = [first_cache_group[key] for key in keys]
 

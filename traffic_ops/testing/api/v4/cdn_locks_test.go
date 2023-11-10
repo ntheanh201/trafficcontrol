@@ -202,20 +202,18 @@ func TestCDNLocks(t *testing.T) {
 				"OK when USER OWNS LOCK": {
 					EndpointID: totest.GetCacheGroupId(t, TOSession, "cachegroup1"), ClientSession: opsUserWithLockSession,
 					RequestBody: map[string]interface{}{
-						"name":      "cachegroup1",
-						"shortName": "newShortName",
-						"typeName":  "EDGE_LOC",
-						"typeId":    totest.GetTypeId(t, TOSession, "EDGE_LOC"),
+						"name":     "cachegroup1",
+						"typeName": "EDGE_LOC",
+						"typeId":   totest.GetTypeId(t, TOSession, "EDGE_LOC"),
 					},
 					Expectations: utils.CkRequest(utils.NoError(), utils.HasStatus(http.StatusOK)),
 				},
 				"FORBIDDEN when ADMIN USER DOESNT OWN LOCK": {
 					EndpointID: totest.GetCacheGroupId(t, TOSession, "cachegroup1"), ClientSession: TOSession,
 					RequestBody: map[string]interface{}{
-						"name":      "cachegroup1",
-						"shortName": "newShortName",
-						"typeName":  "EDGE_LOC",
-						"typeId":    totest.GetTypeId(t, TOSession, "EDGE_LOC"),
+						"name":     "cachegroup1",
+						"typeName": "EDGE_LOC",
+						"typeId":   totest.GetTypeId(t, TOSession, "EDGE_LOC"),
 					},
 					Expectations: utils.CkRequest(utils.HasError(), utils.HasStatus(http.StatusForbidden)),
 				},

@@ -185,7 +185,6 @@ func ToCacheGroup(cacheGroup tc.CacheGroupNullable) tc.CacheGroupNullableV5 {
 	return tc.CacheGroupNullableV5{
 		ID:                          cacheGroup.ID,
 		Name:                        cacheGroup.Name,
-		ShortName:                   cacheGroup.ShortName,
 		Latitude:                    cacheGroup.Latitude,
 		Longitude:                   cacheGroup.Longitude,
 		ParentName:                  cacheGroup.ParentName,

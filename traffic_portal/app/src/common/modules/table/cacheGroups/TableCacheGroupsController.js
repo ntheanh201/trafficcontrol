@@ -126,7 +126,6 @@ var TableCacheGroupsController = function(cacheGroups, $scope, $state, $uibModal
 
     $scope.columns = [
         { "name": "Name", "visible": true, "searchable": true },
-        { "name": "Short Name", "visible": true, "searchable": true },
         { "name": "Type", "visible": true, "searchable": true },
         { "name": "1st Parent", "visible": true, "searchable": true },
         { "name": "2nd Parent", "visible": true, "searchable": true },

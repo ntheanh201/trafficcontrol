@@ -400,7 +400,6 @@ func TestGetMidServers(t *testing.T) {
 	testCG1 := tc.CacheGroup{
 		ID:                          1,
 		Name:                        "Cachegroup",
-		ShortName:                   "cg1",
 		Latitude:                    38.7,
 		Longitude:                   90.7,
 		ParentCachegroupID:          2,
@@ -423,7 +422,6 @@ func TestGetMidServers(t *testing.T) {
 	testCG2 := tc.CacheGroup{
 		ID:                          2,
 		Name:                        "parentCacheGroup",
-		ShortName:                   "pg1",
 		Latitude:                    38.7,
 		Longitude:                   90.7,
 		ParentCachegroupID:          1,
