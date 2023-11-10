@@ -25,7 +25,6 @@ import { SideNavigationPage } from '../PageObjects/SideNavigationPage.po';
 interface CreateCacheGroup {
     Type: string;
     Name: string;
-    ShortName: string;
     Latitude: string;
     Longitude: string;
     ParentCacheGroup: string;
@@ -40,7 +39,6 @@ interface UpdateCacheGroup {
 export class CacheGroupPage extends BasePage {
     private btnCreateCacheGroups = element(by.name('createCacheGroupButton'));
     private txtName = element(by.name("name"))
-    private txtShortName = element(by.name("shortName"));
     private txtType = element(by.name("type"));
     private txtLatitude = element(by.name("latitude"));
     private txtLongtitude = element(by.name("longitude"));
@@ -70,7 +68,6 @@ export class CacheGroupPage extends BasePage {
             }
             await this.btnCreateCacheGroups.click();
             await this.txtName.sendKeys(cachegroup.Name + this.randomize);
-            await this.txtShortName.sendKeys(cachegroup.ShortName + this.randomize);
             await this.txtType.sendKeys(cachegroup.Type);
             await this.txtLatitude.sendKeys(cachegroup.Latitude);
             await this.txtLongtitude.sendKeys(cachegroup.Longitude);
@@ -80,7 +77,6 @@ export class CacheGroupPage extends BasePage {
         } else {
             await this.btnCreateCacheGroups.click();
             await this.txtName.sendKeys(cachegroup.Name + this.randomize);
-            await this.txtShortName.sendKeys(cachegroup.ShortName + this.randomize);
             await this.txtType.sendKeys(cachegroup.Type);
             await this.txtLatitude.sendKeys(cachegroup.Latitude);
             await this.txtLongtitude.sendKeys(cachegroup.Longitude);
