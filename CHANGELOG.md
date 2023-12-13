@@ -6,17 +6,21 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/).
 ## [unreleased]
 ### Added
 - [#7812](https://github.com/apache/trafficcontrol/pull/7812) *Traffic Portal*: Expose the `configUpdateFailed` and `revalUpdateFailed` fields on the server table.
+- [#7870](https://github.com/apache/trafficcontrol/pull/7870) *Traffic Portal*: Adds a hyperlink to the DSR page to the DS itself for ease of navigation.
 
 ### Changed
 - [#7614](https://github.com/apache/trafficcontrol/pull/7614) *Traffic Ops* The database upgrade process no longer overwrites changes users may have made to the initially seeded data.
 - [#7832](https://github.com/apache/trafficcontrol/pull/7832) *t3c* Removed perl dependency
+- Updated the CacheGroups Traffic Portal page to use a more performant AG-Grid-based table.
+
+### Fixed
+- [#7846](https://github.com/apache/trafficcontrol/pull/7846) *Traffic Portal* Increase State character limit
 
 ## [8.0.0] - 2023-09-20
 ### Added
 - [#7672](https://github.com/apache/trafficcontrol/pull/7672) *Traffic Control Health Client*: Added peer monitor flag while using `strategies.yaml`.
 - [#7609](https://github.com/apache/trafficcontrol/pull/7609) *Traffic Portal*: Added Scope Query Param to SSO login.
 - [#7450](https://github.com/apache/trafficcontrol/pull/7450) *Traffic Ops*: Removed hypnotoad section and added listen field to traffic_ops_golang section in order to simplify cdn config.
-- [#7290](https://github.com/apache/trafficcontrol/pull/7302) *Traffic Monitor*: Update TM results with hostname from via header, syncronize health on caches with same service address.
 - [#7291](https://github.com/apache/trafficcontrol/pull/7291) *Traffic Ops*: Extended Layered Profile feature to aggregate parameters for all server profiles.
 - [#7314](https://github.com/apache/trafficcontrol/pull/7314) *Traffic Portal*: Added capability feature to Delivery Service Form (HTTP, DNS).
 - [#7295](https://github.com/apache/trafficcontrol/pull/7295) *Traffic Portal*: Added description and priority order for Layered Profile on server form.
@@ -94,6 +98,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/).
 - [#7814](https://github.com/apache/trafficcontrol/issues/7814) All Go components: Updated the module path to [`github.com/apache/trafficcontrol/v8`](https://pkg.go.dev/github.com/apache/trafficcontrol/v8). Module https://pkg.go.dev/github.com/apache/trafficcontrol will not receive further updates.
 
 ### Fixed
+- [#7879](https://github.com/comcast-cdn/trafficcontrol/pull/7879) *Traffic Ops, Traffic Portal*: Fixed broken capability links for delivery service and added required capability as a column in DS table.
+- [#7878](https://github.com/apache/trafficcontrol/pull/7878) *Traffic Ops, Traffic Portal*: Fixed the case where TO was failing to assign delivery services to a server, due to a bug in the way the list of preexisting delivery services was being returned.
 - [#7819](https://github.com/apache/trafficcontrol/pull/7819) *Traffic Ops*: API v5 routes should not use `privLevel` comparisons.
 - [#7802](https://github.com/apache/trafficcontrol/pull/7802) *Traffic Control Health Client*: Fixed ReadMe.md typos and duplicates.
 - [#7764](https://github.com/apache/trafficcontrol/pull/7764) *Traffic Ops*: Collapsed DB migrations.
@@ -191,6 +197,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/).
 - [#7688](https://github.com/apache/trafficcontrol/pull/7688) *Traffic Ops*: Fixed secured parameters being visible when role has proper permissions.
 - [#7697](https://github.com/apache/trafficcontrol/pull/7697) *Traffic Ops*: Fixed `iloPassword` and `xmppPassword` checking for priv-level instead of using permissions.
 - [#7817](https://github.com/apache/trafficcontrol/pull/7817) *Traffic Control Cache Config (t3c)* fixed issue that would cause null ptr panic on client fallback.
+- [#7866](https://github.com/apache/trafficcontrol/pull/7866) *Traffic Control Cache Config (t3c)* fixed rpm db check to work with rocky linux 9
 
 ### Removed
 - [#7808](https://github.com/apache/trafficcontrol/pull/7808) *Traffic Router*: Set SOA `minimum` field to a custom value defined in the `tld.soa.minimum` param, and remove the previously added `dns.negative.caching.ttl` property.
