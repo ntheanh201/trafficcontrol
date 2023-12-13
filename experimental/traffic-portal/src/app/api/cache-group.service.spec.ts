@@ -35,7 +35,6 @@ describe("CacheGroupService", () => {
 		parentCachegroupName: null,
 		secondaryParentCachegroupId: null,
 		secondaryParentCachegroupName: null,
-		shortName: "test",
 		typeId: 1,
 		typeName: "EDGE_LOC"
 	};
