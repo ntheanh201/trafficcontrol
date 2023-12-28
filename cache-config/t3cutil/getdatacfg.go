@@ -572,7 +572,7 @@ func GetConfigData(toClient *toreq.TOClient, disableProxy bool, cacheHostName st
 		}
 		fs := []func() error{dsF, cdnF, jobsF}
 		fs = append(fs, serverParamsFs...)
-		if !revalOnly {
+		if false {
 			fs = append([]func() error{sslF}, fs...) // skip ssl keys for reval only, which doesn't need them
 		}
 		return util.JoinErrs(runParallel(fs))
