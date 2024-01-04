@@ -18,103 +18,134 @@
  */
 
 /**
- * @param {*} serverCapabilities
+ *@typedef ServerCapability
+ * @property {string} name
+ * @property {string} description
+ * @property {string} lastUpdated
+ */
+
+/**
+ * @param {ServerCapability[]} serverCapabilities
  * @param {*} $scope
  * @param {*} $state
  * @param {import("../../../service/utils/angular.ui.bootstrap").IModalService} $uibModal
- * @param {import("angular").IWindowService} $window
  * @param {import("../../../service/utils/LocationUtils")} locationUtils
  * @param {import("../../../api/ServerCapabilityService")} serverCapabilityService
  * @param {import("../../../models/MessageModel")} messageModel
  */
-var TableServerCapabilitiesController = function(serverCapabilities, $scope, $state, $uibModal, $window, locationUtils, serverCapabilityService, messageModel) {
+var TableServerCapabilitiesController = function (serverCapabilities, $scope, $state, $uibModal, locationUtils, serverCapabilityService, messageModel) {
 
-	var deleteServerCapability = function(serverCapability) {
-		serverCapabilityService.deleteServerCapability(serverCapability.name)
-			.then(function(result) {
-				messageModel.setMessages(result.data.alerts, false);
-				$scope.refresh();
-			});
-	};
+    /**** Constants, scope data, etc. ****/
 
-	var confirmDelete = function(serverCapability) {
-		var params = {
-			title: 'Delete Server Capability: ' + serverCapability.name,
-			key: serverCapability.name
-		};
-		var modalInstance = $uibModal.open({
-			templateUrl: 'common/modules/dialog/delete/dialog.delete.tpl.html',
-			controller: 'DialogDeleteController',
-			size: 'md',
-			resolve: {
-				params: function () {
-					return params;
-				}
-			}
-		});
-		modalInstance.result.then(function() {
-			deleteServerCapability(serverCapability);
-		});
-	};
+    /** The columns of the ag-grid table */
+    $scope.columns = [
+        {
+            headerName: "Name",
+            field: "name",
+            hide: false,
+        },
+        {
+            headerName: "Description",
+            field: "description",
+            hide: false,
+        },
+        {
+            headerName: "Last Updated",
+            field: "lastUpdated",
+            hide: true,
+            filter: "agDateColumnFilter",
+        },
+    ]
 
-	$scope.serverCapabilities = serverCapabilities;
+    /** @type {import("../agGrid/CommonGridController").CGC.DropDownOption[]} */
+    $scope.dropDownOptions = [{
+        name: "createServerCapabilityMenuItem",
+        href: "#!/server-capabilities/new",
+        text: "Create New Server Capability",
+        type: 2
+    }]
 
-	$scope.contextMenuItems = [
-		{
-			text: 'Open in New Tab',
-			click: function ($itemScope) {
-				$window.open('/#!/server-capabilities/' + $itemScope.sc.name, '_blank');
-			}
-		},
-		null, // Dividier
-		{
-			text: 'Edit',
-			click: function ($itemScope) {
-				$scope.editServerCapability($itemScope.sc.name);
-			}
-		},
-		{
-			text: 'Delete',
-			click: function ($itemScope) {
-				confirmDelete($itemScope.sc);
-			}
-		},
-		null, // Dividier
-		{
-			text: 'View Delivery Services',
-			click: function ($itemScope) {
-				locationUtils.navigateToPath('/server-capabilities/delivery-services?name=' + $itemScope.sc.name);
-			}
-		},
-		{
-			text: 'View Servers',
-			click: function ($itemScope) {
-				locationUtils.navigateToPath('/server-capabilities/servers?name=' + $itemScope.sc.name );
-			}
-		}
-	];
+    /** Reloads all resolved data for the view. */
+    $scope.refresh = function () {
+        $state.reload();
+    };
 
-	$scope.createServerCapability = function() {
-		locationUtils.navigateToPath('/server-capabilities/new');
-	};
+    function deleteServerCapability(serverCapability) {
+        serverCapabilityService.deleteServerCapability(serverCapability.name)
+            .then(function (result) {
+                messageModel.setMessages(result.data.alerts, false);
+                $scope.refresh();
+            });
+    };
 
-	$scope.editServerCapability = function(name) {
-		locationUtils.navigateToPath('/server-capabilities/edit?name=' + name);
-	};
+    function confirmDelete(serverCapability) {
+        const params = {
+            title: 'Delete Server Capability: ' + serverCapability.name,
+            key: serverCapability.name
+        };
+        const modalInstance = $uibModal.open({
+            templateUrl: 'common/modules/dialog/delete/dialog.delete.tpl.html',
+            controller: 'DialogDeleteController',
+            size: 'md',
+            resolve: {params}
+        });
+        modalInstance.result.then(function () {
+            deleteServerCapability(serverCapability);
+        });
+    };
 
-	$scope.refresh = function() {
-		$state.reload(); // reloads all the resolves for the view
-	};
+    /** @type {import("../agGrid/CommonGridController").CGC.ContextMenuOption[]} */
+    $scope.contextMenuOptions = [
+        {
+            getHref: serverCapability => `#!/server-capabilities/edit?name=${serverCapability.name}`,
+            getText: serverCapability => `Open ${serverCapability.name} in a new tab`,
+            newTab: true,
+            type: 2
+        },
+        {type: 0},
+        {
+            getHref: serverCapability => `#!/server-capabilities/edit?name=${serverCapability.name}`,
+            text: "Edit",
+            type: 2
+        },
+        {
+            onClick: serverCapability => confirmDelete(serverCapability),
+            text: "Delete",
+            type: 1
+        },
+        {type: 0},
+        {
+            getHref: serverCapability => `#!/server-capabilities/delivery-services?name=${serverCapability.name}`,
+            text: "View Delivery Services",
+            type: 2
+        },
+        {
+            getHref: serverCapability => `#!/server-capabilities/servers?name=${serverCapability.name}`,
+            text: "Manage Servers",
+            type: 2
+        }
+    ]
 
-	angular.element(document).ready(function () {
-		$('#serverCapabilitiesTable').dataTable({
-			"aLengthMenu": [[25, 50, 100, -1], [25, 50, 100, "All"]],
-			"iDisplayLength": 25,
-			"aaSorting": []
-		});
-	});
+    /** Options, configuration, data and callbacks for the ag-grid table. */
+    /** @type {import("../agGrid/CommonGridController").CGC.GridSettings} */
+    $scope.gridOptions = {
+        onRowClick: function (row) {
+            locationUtils.navigateToPath(`/server-capabilities/edit?name=${row.data.name}`);
+        }
+    };
 
+    $scope.defaultData = {
+        description: "",
+        name: ""
+    };
+
+    $scope.serverCapabilities = serverCapabilities.map(
+        serverCapability => ({
+            ...serverCapability,
+            lastUpdated: new Date(serverCapability.lastUpdated.replace(" ", "T").replace("+00", "Z"))
+        })
+    );
 };
 
-TableServerCapabilitiesController.$inject = ['serverCapabilities', '$scope', '$state', '$uibModal', '$window', 'locationUtils', 'serverCapabilityService', 'messageModel'];
+TableServerCapabilitiesController.$inject = ['serverCapabilities', '$scope', '$state', '$uibModal', 'locationUtils', 'serverCapabilityService', 'messageModel'];
 module.exports = TableServerCapabilitiesController;
