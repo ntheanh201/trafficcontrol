@@ -49,12 +49,6 @@ func TestCacheGroups(t *testing.T) {
 					RequestHeaders: http.Header{rfc.IfModifiedSince: {tomorrow}},
 					Expectations:   utils.CkRequest(utils.NoError(), utils.HasStatus(http.StatusNotModified)),
 				},
-				"NOT MODIFIED when VALID SHORTNAME parameter when NO CHANGES made": {
-					ClientSession:  TOSession,
-					RequestParams:  url.Values{"shortName": {"mog1"}},
-					RequestHeaders: http.Header{rfc.IfModifiedSince: {tomorrow}},
-					Expectations:   utils.CkRequest(utils.NoError(), utils.HasStatus(http.StatusNotModified)),
-				},
 				"OK when VALID request": {
 					ClientSession: TOSession,
 					Expectations:  utils.CkRequest(utils.NoError(), utils.HasStatus(http.StatusOK)),
@@ -64,12 +58,6 @@ func TestCacheGroups(t *testing.T) {
 					RequestParams: url.Values{"name": {"parentCachegroup"}},
 					Expectations: utils.CkRequest(utils.NoError(), utils.HasStatus(http.StatusOK), utils.ResponseHasLength(1),
 						ValidateExpectedField("Name", "parentCachegroup")),
-				},
-				"OK when VALID SHORTNAME parameter": {
-					ClientSession: TOSession,
-					RequestParams: url.Values{"shortName": {"pg2"}},
-					Expectations: utils.CkRequest(utils.NoError(), utils.HasStatus(http.StatusOK), utils.ResponseHasLength(1),
-						ValidateExpectedField("ShortName", "pg2")),
 				},
 				"OK when VALID TOPOLOGY parameter": {
 					ClientSession: TOSession,
@@ -100,7 +88,6 @@ func TestCacheGroups(t *testing.T) {
 						Latitude:            util.Ptr(17.5),
 						Longitude:           util.Ptr(17.5),
 						Name:                util.Ptr("cachegroup1"),
-						ShortName:           util.Ptr("newShortName"),
 						LocalizationMethods: util.Ptr([]tc.LocalizationMethod{tc.LocalizationMethodCZ}),
 						Fallbacks:           util.Ptr([]string{"fallback1"}),
 						Type:                util.Ptr("EDGE_LOC"),
@@ -112,10 +99,9 @@ func TestCacheGroups(t *testing.T) {
 					EndpointID: GetCacheGroupId(t, "cachegroup1"), ClientSession: TOSession,
 					RequestHeaders: http.Header{rfc.IfUnmodifiedSince: {currentTimeRFC}},
 					RequestBody: tc.CacheGroupNullable{
-						Name:      util.Ptr("cachegroup1"),
-						ShortName: util.Ptr("changeName"),
-						Type:      util.Ptr("EDGE_LOC"),
-						TypeID:    util.Ptr(GetTypeId(t, "EDGE_LOC")),
+						Name:   util.Ptr("cachegroup1"),
+						Type:   util.Ptr("EDGE_LOC"),
+						TypeID: util.Ptr(GetTypeId(t, "EDGE_LOC")),
 					},
 					Expectations: utils.CkRequest(utils.HasError(), utils.HasStatus(http.StatusPreconditionFailed)),
 				},
@@ -123,10 +109,9 @@ func TestCacheGroups(t *testing.T) {
 					EndpointID:    GetCacheGroupId(t, "cachegroup1"),
 					ClientSession: TOSession,
 					RequestBody: tc.CacheGroupNullable{
-						Name:      util.Ptr("cachegroup1"),
-						ShortName: util.Ptr("changeName"),
-						Type:      util.Ptr("EDGE_LOC"),
-						TypeID:    util.Ptr(GetTypeId(t, "EDGE_LOC")),
+						Name:   util.Ptr("cachegroup1"),
+						Type:   util.Ptr("EDGE_LOC"),
+						TypeID: util.Ptr(GetTypeId(t, "EDGE_LOC")),
 					},
 					RequestHeaders: http.Header{rfc.IfMatch: {rfc.ETag(currentTime)}},
 					Expectations:   utils.CkRequest(utils.HasError(), utils.HasStatus(http.StatusPreconditionFailed)),
@@ -192,8 +177,6 @@ func ValidateExpectedField(field string, expected string) utils.CkReqFunc {
 		switch field {
 		case "Name":
 			assert.Equal(t, expected, *cg.Name, "Expected name to be %v, but got %v", expected, *cg.Name)
-		case "ShortName":
-			assert.Equal(t, expected, *cg.ShortName, "Expected shortName to be %v, but got %v", expected, *cg.ShortName)
 		case "TypeName":
 			assert.Equal(t, expected, *cg.Type, "Expected type to be %v, but got %v", expected, *cg.Type)
 		default:
@@ -289,7 +272,7 @@ func DeleteTestCacheGroups(t *testing.T) {
 			assert.NoError(t, err, "Cannot delete Cache Group: %v - alerts: %+v", *respCG.Name, err)
 
 			// Retrieve the CacheGroup to see if it got deleted
-			cgs, _, err := TOSession.GetCacheGroupNullableByShortNameWithHdr(*cg.Name, nil)
+			cgs, _, err := TOSession.GetCacheGroupNullableByNameWithHdr(*cg.Name, nil)
 			assert.NoError(t, err, "Error deleting Cache Group by name: %v", err)
 			assert.Equal(t, 0, len(cgs), "Expected CacheGroup name: %s to be deleted", *cg.Name)
 		}

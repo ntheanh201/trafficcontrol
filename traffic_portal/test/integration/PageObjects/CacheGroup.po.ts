@@ -24,7 +24,6 @@ import { randomize } from "../config";
 interface CreateCacheGroup {
     Type: string;
     Name: string;
-    ShortName: string;
     Latitude: string;
     Longitude: string;
     ParentCacheGroup: string;
@@ -79,7 +78,6 @@ export class CacheGroupPage extends SideNavigationPage {
 
         const actions = [
             this.txtName.sendKeys(cachegroup.Name + randomize),
-            element(by.name("shortName")).sendKeys(cachegroup.ShortName),
             element(by.name("type")).sendKeys(cachegroup.Type),
             element(by.name("latitude")).sendKeys(cachegroup.Latitude),
             element(by.name("longitude")).sendKeys(cachegroup.Longitude),
