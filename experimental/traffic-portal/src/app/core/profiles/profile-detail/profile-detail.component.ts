@@ -84,7 +84,7 @@ export class ProfileDetailComponent implements OnInit {
 				throw new Error(`route parameter 'id' was non-number:  ${{ id }}`);
 			} else {
 				this.profile = await this.api.getProfiles(Number(id));
-				this.setTitle();
+				this.navSvc.headerTitle.next(`Profile: ${this.profile.name}`);
 			}
 			this.loading = false;
 		} else {
@@ -105,16 +105,6 @@ export class ProfileDetailComponent implements OnInit {
 	}
 
 	/**
-	 * Sets the headerTitle based on current Profile state.
-	 *
-	 * @private
-	 */
-	private setTitle(): void {
-		const title = this.new ? "New Profile" : `Profile: ${this.profile.name}`;
-		this.navSvc.headerTitle.next(title);
-	}
-
-	/**
 	 * Submits new/updated profile.
 	 *
 	 * @param e HTML form submission event.
@@ -125,11 +115,9 @@ export class ProfileDetailComponent implements OnInit {
 		if(this.new) {
 			this.profile = await this.api.createProfile(this.profile);
 			this.new = false;
-			await this.router.navigate(["core/profiles", this.profile.id]);
 		} else {
 			this.profile = await this.api.updateProfile(this.profile);
 		}
-		this.setTitle();
 	}
 
 	/**

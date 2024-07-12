@@ -16,7 +16,7 @@
 # under the License.
 
 
-/var/log/traffic_router/access.log {
+/opt/traffic_router/var/log/access.log {
     daily
     size 100m
     compress
@@ -25,7 +25,7 @@
     copytruncate
 }
 
-/var/log/traffic_router/traffic_router.log {
+/opt/traffic_router/var/log/traffic_router.log {
     daily
     size 100m
     compress

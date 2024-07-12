@@ -12,9 +12,10 @@
 * limitations under the License.
 */
 
+import { Location } from "@angular/common";
 import { Component, OnInit } from "@angular/core";
 import { MatDialog } from "@angular/material/dialog";
-import { ActivatedRoute, Router } from "@angular/router";
+import { ActivatedRoute } from "@angular/router";
 import { TypeFromResponse } from "trafficops-types";
 
 import { TypeService } from "src/app/api";
@@ -36,8 +37,8 @@ export class TypeDetailComponent implements OnInit {
 
 	constructor(
 		private readonly route: ActivatedRoute,
-		private readonly router: Router,
 		private readonly typeService: TypeService,
+		private readonly location: Location,
 		private readonly dialog: MatDialog,
 		private readonly navSvc: NavigationService,
 		private readonly log: LoggingService,
@@ -53,10 +54,8 @@ export class TypeDetailComponent implements OnInit {
 			return;
 		}
 
-		this.new = ID === "new";
-
-		if (this.new) {
-			this.setTitle();
+		if (ID === "new") {
+			this.navSvc.headerTitle.next("New Type");
 			this.new = true;
 			this.type = {
 				description: "",
@@ -75,17 +74,7 @@ export class TypeDetailComponent implements OnInit {
 		}
 
 		this.type = await this.typeService.getTypes(numID);
-		this.setTitle();
-	}
-
-	/**
-	 * Sets the headerTitle based on current Type state.
-	 *
-	 * @private
-	 */
-	private setTitle(): void {
-		const title = this.new ? "New Type" : `Type: ${this.type.name}`;
-		this.navSvc.headerTitle.next(title);
+		this.navSvc.headerTitle.next(`Type: ${this.type.name}`);
 	}
 
 	/**
@@ -103,7 +92,7 @@ export class TypeDetailComponent implements OnInit {
 		ref.afterClosed().subscribe(result => {
 			if(result) {
 				this.typeService.deleteType(this.type.id);
-				this.router.navigate(["core/types"]);
+				this.location.back();
 			}
 		});
 	}
@@ -119,11 +108,9 @@ export class TypeDetailComponent implements OnInit {
 		if(this.new) {
 			this.type = await this.typeService.createType(this.type);
 			this.new = false;
-			await this.router.navigate(["core/types", this.type.id]);
 		} else {
 			this.type = await this.typeService.updateType(this.type);
 		}
-		this.setTitle();
 	}
 
 }

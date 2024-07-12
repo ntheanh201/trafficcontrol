@@ -31,10 +31,7 @@ describe("UserDetailsComponent", () => {
 	beforeEach(async () => {
 		await TestBed.configureTestingModule({
 			declarations: [ UserDetailsComponent ],
-			imports: [ APITestingModule, RouterTestingModule.withRoutes( [
-				{component: UserDetailsComponent, path: "core/users"},
-				{component: UserDetailsComponent, path: "core/users/:id"},
-			])],
+			imports: [ APITestingModule, RouterTestingModule ],
 			providers: [{provide: CurrentUserService, useClass: CurrentUserTestingService}]
 		}).compileComponents();
 		fixture = TestBed.createComponent(UserDetailsComponent);

@@ -11,10 +11,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
+import { Location } from "@angular/common";
 import { Component, OnInit } from "@angular/core";
 import { MatDialog } from "@angular/material/dialog";
-import { ActivatedRoute, Router } from "@angular/router";
+import { ActivatedRoute } from "@angular/router";
 import { ResponsePhysicalLocation, ResponseRegion } from "trafficops-types";
 
 import { CacheGroupService, PhysicalLocationService } from "src/app/api";
@@ -38,8 +38,8 @@ export class PhysLocDetailComponent implements OnInit {
 
 	constructor(
 		private readonly route: ActivatedRoute,
-		private readonly router: Router,
 		private readonly cacheGroupService: CacheGroupService,
+		private readonly location: Location,
 		private readonly dialog: MatDialog,
 		private readonly navSvc: NavigationService,
 		private readonly physLocService: PhysicalLocationService,
@@ -57,10 +57,8 @@ export class PhysLocDetailComponent implements OnInit {
 			return;
 		}
 
-		this.new = ID === "new";
-
-		if (this.new) {
-			this.setTitle();
+		if (ID === "new") {
+			this.navSvc.headerTitle.next("New Physical Location");
 			this.new = true;
 			this.physLocation = {
 				address: "",
@@ -87,17 +85,7 @@ export class PhysLocDetailComponent implements OnInit {
 		}
 
 		this.physLocation = await this.physLocService.getPhysicalLocations(numID);
-		this.setTitle();
-	}
-
-	/**
-	 * Sets the headerTitle based on current Physical Location state.
-	 *
-	 * @private
-	 */
-	private setTitle(): void {
-		const title = this.new ? "New Physical Location" : `Physical Location: ${this.physLocation.name}`;
-		this.navSvc.headerTitle.next(title);
+		this.navSvc.headerTitle.next(`Physical Location: ${this.physLocation.name}`);
 	}
 
 	/**
@@ -115,7 +103,7 @@ export class PhysLocDetailComponent implements OnInit {
 		ref.afterClosed().subscribe(result => {
 			if(result) {
 				this.physLocService.deletePhysicalLocation(this.physLocation.id);
-				this.router.navigate(["core/phys-locs"]);
+				this.location.back();
 			}
 		});
 	}
@@ -131,10 +119,8 @@ export class PhysLocDetailComponent implements OnInit {
 		if(this.new) {
 			this.physLocation = await this.physLocService.createPhysicalLocation(this.physLocation);
 			this.new = false;
-			await this.router.navigate(["core/phys-locs", this.physLocation.id]);
 		} else {
 			this.physLocation = await this.physLocService.updatePhysicalLocation(this.physLocation);
 		}
-		this.setTitle();
 	}
 }

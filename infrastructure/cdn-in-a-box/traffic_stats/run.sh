@@ -95,12 +95,12 @@ cat <<-EOF >/opt/traffic_stats/conf/traffic_stats_seelog.xml
 <?xml version='1.0'?>
 <seelog minlevel="debug">
     <outputs formatid="std:debug-short">
-        <file path="/var/log/traffic_stats/traffic_stats.log" />
+        <file path="/opt/traffic_stats/var/log/traffic_stats/traffic_stats.log" />
     </outputs>
 </seelog>
 EOF
 
-touch /var/log/traffic_stats/traffic_stats.log
+touch /opt/traffic_stats/var/log/traffic_stats/traffic_stats.log
 
 # Wait for influxdb
 until nc $INFLUXDB_HOST $INFLUXDB_PORT </dev/null >/dev/null 2>&1; do
@@ -124,5 +124,5 @@ else
   "${traffic_stats_command[@]}" &
 fi;
 
-exec tail -f /var/log/traffic_stats/traffic_stats.log
+exec tail -f /opt/traffic_stats/var/log/traffic_stats/traffic_stats.log
 
