@@ -12,9 +12,10 @@
 * limitations under the License.
 */
 
+import { Location } from "@angular/common";
 import { Component, OnInit } from "@angular/core";
 import { MatDialog } from "@angular/material/dialog";
-import { ActivatedRoute, Router } from "@angular/router";
+import { ActivatedRoute } from "@angular/router";
 import { ResponseParameter } from "trafficops-types";
 
 import { ProfileService } from "src/app/api";
@@ -40,8 +41,8 @@ export class ParameterDetailComponent implements OnInit {
 
 	constructor(
 		private readonly route: ActivatedRoute,
-		private readonly router: Router,
 		private readonly profileService: ProfileService,
+		private readonly location: Location,
 		private readonly dialog: MatDialog,
 		private readonly navSvc: NavigationService,
 		private readonly log: LoggingService,
@@ -57,10 +58,8 @@ export class ParameterDetailComponent implements OnInit {
 			return;
 		}
 
-		this.new = ID === "new";
-
-		if (this.new) {
-			this.setTitle();
+		if (ID === "new") {
+			this.navSvc.headerTitle.next("New Parameter");
 			this.new = true;
 			this.parameter = {
 				configFile: "",
@@ -81,17 +80,7 @@ export class ParameterDetailComponent implements OnInit {
 		}
 
 		this.parameter = await this.profileService.getParameters(numID);
-		this.setTitle();
-	}
-
-	/**
-	 * Sets the headerTitle based on current Parameter state.
-	 *
-	 * @private
-	 */
-	private setTitle(): void {
-		const title = this.new ? "New Parameter" : `Parameter: ${this.parameter.name} (${this.parameter.id})`;
-		this.navSvc.headerTitle.next(title);
+		this.navSvc.headerTitle.next(`Parameter: ${this.parameter.name} (${this.parameter.id})`);
 	}
 
 	/**
@@ -109,7 +98,7 @@ export class ParameterDetailComponent implements OnInit {
 		ref.afterClosed().subscribe(result => {
 			if(result) {
 				this.profileService.deleteParameter(this.parameter.id);
-				this.router.navigate(["core/parameters"]);
+				this.location.back();
 			}
 		});
 	}
@@ -125,10 +114,8 @@ export class ParameterDetailComponent implements OnInit {
 		if(this.new) {
 			this.parameter = await this.profileService.createParameter(this.parameter);
 			this.new = false;
-			await this.router.navigate(["core/parameters", this.parameter.id]);
 		} else {
 			this.parameter = await this.profileService.updateParameter(this.parameter);
 		}
-		this.setTitle();
 	}
 }

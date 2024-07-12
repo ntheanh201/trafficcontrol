@@ -175,7 +175,7 @@ However newer versions of astats also support CSV output, which can have some CP
 
 Troubleshooting and Log Files
 =============================
-Traffic Monitor log files are in :file:`/var/log/traffic_monitor`.
+Traffic Monitor log files are in :file:`/opt/traffic_monitor/var/log/`.
 
 .. _admin-tm-extensions:
 

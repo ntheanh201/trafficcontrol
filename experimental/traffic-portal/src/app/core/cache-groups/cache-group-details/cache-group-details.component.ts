@@ -12,14 +12,15 @@
 * limitations under the License.
 */
 
-import { Component, OnInit } from "@angular/core";
+import { Location } from "@angular/common";
+import { Component, type OnInit } from "@angular/core";
 import { FormControl } from "@angular/forms";
 import { MatDialog } from "@angular/material/dialog";
-import { ActivatedRoute, Router } from "@angular/router";
-import { LocalizationMethod, localizationMethodToString, TypeFromResponse, ResponseCacheGroup } from "trafficops-types";
+import { ActivatedRoute } from "@angular/router";
+import { LocalizationMethod, localizationMethodToString, TypeFromResponse, type ResponseCacheGroup } from "trafficops-types";
 
 import { CacheGroupService, TypeService } from "src/app/api";
-import { DecisionDialogComponent, DecisionDialogData } from "src/app/shared/dialogs/decision-dialog/decision-dialog.component";
+import { DecisionDialogComponent, type DecisionDialogData } from "src/app/shared/dialogs/decision-dialog/decision-dialog.component";
 import { LoggingService } from "src/app/shared/logging.service";
 import { NavigationService } from "src/app/shared/navigation/navigation.service";
 
@@ -68,9 +69,9 @@ export class CacheGroupDetailsComponent implements OnInit {
 
 	constructor(
 		private readonly route: ActivatedRoute,
-		private readonly router: Router,
 		private readonly api: CacheGroupService,
 		private readonly typesAPI: TypeService,
+		private readonly location: Location,
 		private readonly dialog: MatDialog,
 		private readonly navSvc: NavigationService,
 		private readonly log: LoggingService,
@@ -181,7 +182,7 @@ export class CacheGroupDetailsComponent implements OnInit {
 		ref.afterClosed().subscribe(result => {
 			if (result) {
 				this.api.deleteCacheGroup(this.cacheGroup);
-				this.router.navigate(["core/cache-groups"]);
+				this.location.replaceState("core/cache-groups");
 			}
 		});
 	}
@@ -207,7 +208,6 @@ export class CacheGroupDetailsComponent implements OnInit {
 		if (this.new) {
 			this.cacheGroup = await this.api.createCacheGroup(this.cacheGroup);
 			this.new = false;
-			await this.router.navigate(["core/cache-groups", this.cacheGroup.id]);
 		} else {
 			this.cacheGroup = await this.api.updateCacheGroup(this.cacheGroup);
 		}

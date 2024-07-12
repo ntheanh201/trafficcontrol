@@ -45,23 +45,23 @@ export class TpHeaderComponent implements OnInit {
 	 * Angular lifecycle hook
 	 */
 	public ngOnInit(): void {
-		this.navSvc.headerTitle.subscribe(title => {
+		this.headerSvc.headerTitle.subscribe(title => {
 			this.title = title;
 		});
-		this.navSvc.headerHidden.subscribe(hidden => {
+		this.headerSvc.headerHidden.subscribe(hidden => {
 			this.hidden = hidden;
 		});
-		this.navSvc.horizontalNavsUpdated.subscribe(navs => {
+		this.headerSvc.horizontalNavsUpdated.subscribe(navs => {
 			this.horizNavs = navs;
 		});
-		this.navSvc.verticalNavsUpdated.subscribe(navs => {
+		this.headerSvc.verticalNavsUpdated.subscribe(navs => {
 			this.vertNavs = navs;
 		});
 	}
 
 	constructor(
 		public readonly themeSvc: ThemeManagerService,
-		private readonly navSvc: NavigationService,
+		private readonly headerSvc: NavigationService,
 		private readonly log: LoggingService,
 	) { }
 

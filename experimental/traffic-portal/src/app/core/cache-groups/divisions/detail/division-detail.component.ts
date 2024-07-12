@@ -11,10 +11,10 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 */
-
+import { Location } from "@angular/common";
 import { Component, OnInit } from "@angular/core";
 import { MatDialog } from "@angular/material/dialog";
-import { ActivatedRoute, Router } from "@angular/router";
+import { ActivatedRoute } from "@angular/router";
 import { ResponseDivision } from "trafficops-types";
 
 import { CacheGroupService } from "src/app/api";
@@ -35,8 +35,8 @@ export class DivisionDetailComponent implements OnInit {
 
 	constructor(
 		private readonly route: ActivatedRoute,
-		private readonly router: Router,
 		private readonly cacheGroupService: CacheGroupService,
+		private readonly location: Location,
 		private readonly dialog: MatDialog,
 		private readonly navSvc: NavigationService,
 		private readonly log: LoggingService,
@@ -52,10 +52,8 @@ export class DivisionDetailComponent implements OnInit {
 			return;
 		}
 
-		this.new = ID === "new";
-
-		if (this.new) {
-			this.setTitle();
+		if (ID === "new") {
+			this.navSvc.headerTitle.next("New Division");
 			this.new = true;
 			this.division = {
 				id: -1,
@@ -71,17 +69,7 @@ export class DivisionDetailComponent implements OnInit {
 		}
 
 		this.division = await this.cacheGroupService.getDivisions(numID);
-		this.setTitle();
-	}
-
-	/**
-	 * Sets the headerTitle based on current Division state.
-	 *
-	 * @private
-	 */
-	private setTitle(): void {
-		const title = this.new ? "New Division" : `Division: ${this.division.name}`;
-		this.navSvc.headerTitle.next(title);
+		this.navSvc.headerTitle.next(`Division: ${this.division.name}`);
 	}
 
 	/**
@@ -99,7 +87,7 @@ export class DivisionDetailComponent implements OnInit {
 		ref.afterClosed().subscribe(result => {
 			if(result) {
 				this.cacheGroupService.deleteDivision(this.division.id);
-				this.router.navigate(["core/divisions"]);
+				this.location.back();
 			}
 		});
 	}
@@ -115,11 +103,9 @@ export class DivisionDetailComponent implements OnInit {
 		if(this.new) {
 			this.division = await this.cacheGroupService.createDivision(this.division);
 			this.new = false;
-			await this.router.navigate(["core/divisions", this.division.id]);
 		} else {
 			this.division = await this.cacheGroupService.updateDivision(this.division);
 		}
-		this.setTitle();
 	}
 
 }

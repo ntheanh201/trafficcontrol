@@ -7,7 +7,7 @@
   "params": [
     {
       "configFile": "inputs.conf",
-      "name": "monitor:///var/log/tomcat/access.log",
+      "name": "monitor:///opt/tomcat/logs/access.log",
       "value": "index=index_odol_test;sourcetype=access_ccr"
     },
     {

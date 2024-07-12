@@ -11,8 +11,7 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 */
-
-import { Component, OnInit } from "@angular/core";
+import { Component, type OnInit } from "@angular/core";
 import { FormControl } from "@angular/forms";
 import { MatDialog } from "@angular/material/dialog";
 import { ActivatedRoute } from "@angular/router";

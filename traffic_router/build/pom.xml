@@ -89,6 +89,7 @@
 								<requireEnvironmentVariable>
 									<variableName>BUILD_NUMBER</variableName>
 									<variableName>TOMCAT_VERSION</variableName>
+									<variableName>TOMCAT_RELEASE</variableName>
 									<variableName>RHEL_VERSION</variableName>
 									<variableName>RPM_TARGET_OS</variableName>
 									<variableName>STARTUP_SCRIPT_DIR</variableName>
@@ -119,7 +120,7 @@
 					<plugin>
 						<groupId>org.codehaus.mojo</groupId>
 						<artifactId>rpm-maven-plugin</artifactId>
-						<version>2.2.0</version>
+						<version>2.1.4</version>
 						<extensions>true</extensions>
 						<executions>
 							<execution>
@@ -161,25 +162,10 @@
 									</sources>
 								</mapping>
 								<mapping>
-									<directory>/var/log/traffic_router</directory>
+									<directory>${deploy.dir}/var/log</directory>
 									<filemode>755</filemode>
 									<username>root</username>
 									<groupname>root</groupname>
-								</mapping>
-								<mapping>
-									<directory>${deploy.dir}/var</directory>
-									<filemode>755</filemode>
-									<username>root</username>
-									<groupname>root</groupname>
-									<sources>
-										<!-- TODO: The /opt/traffic_router/var/log symlink is deprecated and should be removed
-											 for ATC 9.0.0. -->
-										<softLinkSource>
-											<destination>log</destination>
-											<location>/var/log/traffic_router</location>
-											<failIfLocationNotExists>false</failIfLocationNotExists>
-										</softLinkSource>
-									</sources>
 								</mapping>
 								<mapping>
 									<directory>${deploy.dir}/temp</directory>
@@ -262,15 +248,10 @@
 									</sources>
 								</mapping>
 							</mappings>
-							<installScriptlet>
-								<!-- TODO: The /opt/traffic_router/var/log symlink is deprecated and should be removed
-								     for ATC 9.0.0. -->
-								<script>ln -sfT /var/log/traffic_router %{buildroot}${deploy.dir}/var/log</script>
-							</installScriptlet>
 							<requires>
 								<require>java-11-openjdk-headless</require>
 								<require>tzdata-java</require>
-								<require>tomcat >= ${tomcat.version}</require>
+								<require>tomcat >= ${env.TOMCAT_VERSION}.${env.TOMCAT_RELEASE}</require>
 								<require>apr >= 1.4.8</require>
 								<require>tomcat-native >= 1.2.23</require>
 							</requires>

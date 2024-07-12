@@ -79,7 +79,9 @@ export class OriginService extends APIService {
 	 * @param originOrId The ID of the Origin to delete.
 	 * @returns The deleted Origin.
 	 */
-	public async deleteOrigin(originOrId: number | RequestOriginResponse): Promise<RequestOriginResponse> {
+	public async deleteOrigin(
+		originOrId: number | RequestOriginResponse
+	): Promise<RequestOriginResponse> {
 		const id = typeof originOrId === "number" ? originOrId : originOrId.id;
 		return this.delete<RequestOriginResponse>(`origins?id=${id}`).toPromise();
 	}
@@ -90,7 +92,9 @@ export class OriginService extends APIService {
 	 * @param origin The Origin to create.
 	 * @returns The created Origin.
 	 */
-	public async createOrigin(origin: RequestOrigin): Promise<RequestOriginResponse> {
+	public async createOrigin(
+		origin: RequestOrigin
+	): Promise<RequestOriginResponse> {
 		return this.post<RequestOriginResponse>("origins", origin).toPromise();
 	}
 

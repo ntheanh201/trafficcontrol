@@ -12,9 +12,10 @@
 * limitations under the License.
 */
 
+import { Location } from "@angular/common";
 import { Component, OnInit } from "@angular/core";
 import { MatDialog } from "@angular/material/dialog";
-import { ActivatedRoute, Router } from "@angular/router";
+import { ActivatedRoute } from "@angular/router";
 import { ResponseCDN } from "trafficops-types";
 
 import { CDNService } from "src/app/api";
@@ -47,8 +48,8 @@ export class CDNDetailComponent implements OnInit {
 
 	constructor(
 		private readonly route: ActivatedRoute,
-		private readonly router: Router,
 		private readonly api: CDNService,
+		private readonly location: Location,
 		private readonly dialog: MatDialog,
 		private readonly navSvc: NavigationService,
 		private readonly log: LoggingService,
@@ -83,7 +84,6 @@ export class CDNDetailComponent implements OnInit {
 			return;
 		}
 		this.cdn = this.cdns.splice(index, 1)[0];
-		this.setTitle();
 	}
 
 	/**
@@ -116,7 +116,7 @@ export class CDNDetailComponent implements OnInit {
 		ref.afterClosed().subscribe(result => {
 			if (result) {
 				this.api.deleteCDN(this.cdn);
-				this.router.navigate(["core/cdns"]);
+				this.location.replaceState("core/cdns");
 			}
 		});
 	}
@@ -133,7 +133,6 @@ export class CDNDetailComponent implements OnInit {
 		if (this.new) {
 			this.cdn = await this.api.createCDN(this.cdn);
 			this.new = false;
-			await this.router.navigate(["core/cdns", this.cdn.id]);
 		} else {
 			this.cdn = await this.api.updateCDN(this.cdn);
 		}
