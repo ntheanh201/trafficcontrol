@@ -300,7 +300,6 @@ func randCacheGroup() *tc.CacheGroupNullableV5 {
 	return &tc.CacheGroupNullableV5{
 		ID:        util.Ptr(test.RandInt()),
 		Name:      util.Ptr(test.RandStr()),
-		ShortName: util.Ptr(test.RandStr()),
 		Latitude:  util.Ptr(test.RandFloat64()),
 		Longitude: util.Ptr(test.RandFloat64()),
 		// ParentName:                  util.StrPtr(test.RandStr()),
