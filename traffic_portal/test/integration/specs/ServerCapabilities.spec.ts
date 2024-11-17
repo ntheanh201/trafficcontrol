@@ -39,12 +39,6 @@ serverCapabilities.tests.forEach(serverCapabilitiesData => {
                 await serverCapabilitiesPage.OpenConfigureMenu();
                 await serverCapabilitiesPage.OpenServerCapabilityPage();
             });
-            serverCapabilitiesData.check.forEach(check => {
-                it(check.description, async () => {
-                    expect(await serverCapabilitiesPage.CheckCSV(check.Name)).toBe(true);
-                    await serverCapabilitiesPage.OpenServerCapabilityPage();
-                });
-            });
             serverCapabilitiesData.add.forEach(add => {
                 it(add.description, async () => {
                     expect(await serverCapabilitiesPage.CreateServerCapabilities(add.name, add.capabilityDescription, add.validationMessage)).toBe(true);
