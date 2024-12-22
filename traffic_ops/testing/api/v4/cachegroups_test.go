@@ -59,14 +59,6 @@ func TestCacheGroups(t *testing.T) {
 					},
 					Expectations: utils.CkRequest(utils.NoError(), utils.HasStatus(http.StatusNotModified)),
 				},
-				"NOT MODIFIED when VALID SHORTNAME parameter when NO CHANGES made": {
-					ClientSession: TOSession,
-					RequestOpts: client.RequestOptions{
-						Header:          http.Header{rfc.IfModifiedSince: {tomorrow}},
-						QueryParameters: url.Values{"shortName": {"mog1"}},
-					},
-					Expectations: utils.CkRequest(utils.NoError(), utils.HasStatus(http.StatusNotModified)),
-				},
 				"OK when VALID request": {
 					ClientSession: TOSession,
 					Expectations:  utils.CkRequest(utils.NoError(), utils.HasStatus(http.StatusOK)),
@@ -76,12 +68,6 @@ func TestCacheGroups(t *testing.T) {
 					RequestOpts:   client.RequestOptions{QueryParameters: url.Values{"name": {"parentCachegroup"}}},
 					Expectations: utils.CkRequest(utils.NoError(), utils.HasStatus(http.StatusOK), utils.ResponseHasLength(1),
 						ValidateExpectedField("Name", "parentCachegroup")),
-				},
-				"OK when VALID SHORTNAME parameter": {
-					ClientSession: TOSession,
-					RequestOpts:   client.RequestOptions{QueryParameters: url.Values{"shortName": {"pg2"}}},
-					Expectations: utils.CkRequest(utils.NoError(), utils.HasStatus(http.StatusOK), utils.ResponseHasLength(1),
-						ValidateExpectedField("ShortName", "pg2")),
 				},
 				"OK when VALID TOPOLOGY parameter": {
 					ClientSession: TOSession,
@@ -157,7 +143,6 @@ func TestCacheGroups(t *testing.T) {
 						Latitude:            util.Ptr(17.5),
 						Longitude:           util.Ptr(17.5),
 						Name:                util.Ptr("cachegroup1"),
-						ShortName:           util.Ptr("newShortName"),
 						LocalizationMethods: util.Ptr([]tc.LocalizationMethod{tc.LocalizationMethodCZ}),
 						Fallbacks:           util.Ptr([]string{"fallback1"}),
 						Type:                util.Ptr("EDGE_LOC"),
@@ -169,7 +154,6 @@ func TestCacheGroups(t *testing.T) {
 					EndpointID: totest.GetCacheGroupId(t, TOSession, "nullLatLongCG"), ClientSession: TOSession,
 					RequestBody: tc.CacheGroupNullable{
 						Name:      util.Ptr("nullLatLongCG"),
-						ShortName: util.Ptr("null-ll"),
 						Type:      util.Ptr("EDGE_LOC"),
 						Fallbacks: util.Ptr([]string{"fallback1"}),
 						TypeID:    util.Ptr(totest.GetTypeId(t, TOSession, "EDGE_LOC")),
@@ -182,7 +166,6 @@ func TestCacheGroups(t *testing.T) {
 						Latitude:  util.Ptr(0.0),
 						Longitude: util.Ptr(0.0),
 						Name:      util.Ptr("topology-edge-cg-01"),
-						ShortName: util.Ptr("te1"),
 						Type:      util.Ptr("MID_LOC"),
 						TypeID:    util.Ptr(totest.GetTypeId(t, TOSession, "MID_LOC")),
 					},
@@ -192,10 +175,9 @@ func TestCacheGroups(t *testing.T) {
 					EndpointID: totest.GetCacheGroupId(t, TOSession, "cachegroup1"), ClientSession: TOSession,
 					RequestOpts: client.RequestOptions{Header: http.Header{rfc.IfUnmodifiedSince: {currentTimeRFC}}},
 					RequestBody: tc.CacheGroupNullable{
-						Name:      util.Ptr("cachegroup1"),
-						ShortName: util.Ptr("changeName"),
-						Type:      util.Ptr("EDGE_LOC"),
-						TypeID:    util.Ptr(totest.GetTypeId(t, TOSession, "EDGE_LOC")),
+						Name:   util.Ptr("cachegroup1"),
+						Type:   util.Ptr("EDGE_LOC"),
+						TypeID: util.Ptr(totest.GetTypeId(t, TOSession, "EDGE_LOC")),
 					},
 					Expectations: utils.CkRequest(utils.HasError(), utils.HasStatus(http.StatusPreconditionFailed)),
 				},
@@ -203,10 +185,9 @@ func TestCacheGroups(t *testing.T) {
 					EndpointID: totest.GetCacheGroupId(t, TOSession, "cachegroup1"), ClientSession: TOSession,
 					RequestOpts: client.RequestOptions{Header: http.Header{rfc.IfMatch: {rfc.ETag(currentTime)}}},
 					RequestBody: tc.CacheGroupNullable{
-						Name:      util.Ptr("cachegroup1"),
-						ShortName: util.Ptr("changeName"),
-						Type:      util.Ptr("EDGE_LOC"),
-						TypeID:    util.Ptr(totest.GetTypeId(t, TOSession, "EDGE_LOC")),
+						Name:   util.Ptr("cachegroup1"),
+						Type:   util.Ptr("EDGE_LOC"),
+						TypeID: util.Ptr(totest.GetTypeId(t, TOSession, "EDGE_LOC")),
 					},
 					Expectations: utils.CkRequest(utils.HasError(), utils.HasStatus(http.StatusPreconditionFailed)),
 				},
@@ -276,8 +257,6 @@ func ValidateExpectedField(field string, expected string) utils.CkReqFunc {
 		switch field {
 		case "Name":
 			assert.Equal(t, expected, *cg.Name, "Expected name to be %v, but got %v", expected, *cg.Name)
-		case "ShortName":
-			assert.Equal(t, expected, *cg.ShortName, "Expected shortName to be %v, but got %v", expected, *cg.ShortName)
 		case "TypeName":
 			assert.Equal(t, expected, *cg.Type, "Expected type to be %v, but got %v", expected, *cg.Type)
 		default:
