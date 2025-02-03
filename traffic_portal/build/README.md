@@ -51,7 +51,7 @@
 * Start Traffic Portal
 
     ```
-    $ sudo service traffic_portal start
+    $ sudo systemctl start traffic_portal
     ```
 
 * Navigate to Traffic Portal

@@ -16,8 +16,6 @@
 # specific language governing permissions and limitations
 # under the License.
 
-INIT_DIR="/etc/init.d"
-
 set-dns.sh
 insert-self-into-dns.sh
 
@@ -65,7 +63,18 @@ mv $tmp $props
 # Enroll the Traffic Portal
 to-enroll "tp" ALL || (while true; do echo "enroll failed."; sleep 3 ; done)
 
-# Add node to the path for situations in which the environment is passed.
-./$INIT_DIR/traffic_portal start
+# start pm2 process
+PM2_BIN=/opt/traffic_portal/node_modules/pm2/bin/pm2
+TP_HOME=/opt/traffic_portal/server.js
+TP_PID=/var/run/traffic_portal.pid
+TP_LOG=/var/log/traffic_portal/traffic_portal.log
+
+$PM2_BIN \
+    start $TP_HOME \
+    -p $TP_PID \
+    -l $TP_LOG \
+    --restart-delay 2000 \
+    --time \
+    --name "Traffic Portal Application"
 
 tail -f /var/log/traffic_portal/traffic_portal.log

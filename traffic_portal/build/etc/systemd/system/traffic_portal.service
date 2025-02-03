@@ -1,0 +1,40 @@
+#
+#  Licensed under the Apache License, Version 2.0 (the "License");
+#  you may not use this file except in compliance with the License.
+#  You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+#  Unless required by applicable law or agreed to in writing, software
+#  distributed under the License is distributed on an "AS IS" BASIS,
+#  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#  See the License for the specific language governing permissions and
+#  limitations under the License.
+#
+
+[Unit]
+Description=Traffic Portal Application
+After=network.target
+
+[Service]
+Type=forking
+Environment=NODE_PATH=/opt/traffic_portal/node_modules
+Environment=PATH=/opt/traffic_portal/node_modules/pm2/bin:/usr/bin:${PATH}
+WorkingDirectory=/opt/traffic_portal
+PIDFile=/var/run/traffic_portal.pid
+
+ExecStart=/opt/traffic_portal/node_modules/pm2/bin/pm2 \
+    start /opt/traffic_portal/server.js \
+    -p /var/run/traffic_portal.pid \
+    -l /var/log/traffic_portal/traffic_portal.log \
+    --restart-delay 2000 \
+    --time \
+    --name "Traffic Portal Application"
+
+ExecStop=/opt/traffic_portal/node_modules/pm2/bin/pm2 stop /opt/traffic_portal/server.js
+
+Restart=on-failure
+RestartSec=2
+
+[Install]
+WantedBy=multi-user.target

@@ -17,7 +17,7 @@
  * under the License.
  */
 
-// this is the config that is consumed by /server.js on traffic portal startup (sudo service traffic_portal start)
+// this is the config that is consumed by /server.js on traffic portal startup (sudo systemctl start traffic_portal)
 module.exports = {
     timeout: '120s',
     useSSL: true, // set to true if you plan to use https (self-signed or trusted certs).
