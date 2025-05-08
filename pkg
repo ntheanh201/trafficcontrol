@@ -92,7 +92,7 @@ if [ ${#COMPOSECMD[@]} -eq 0 ]; then
 	if [ -S "$DOCKER_HOST" ]; then
 			DOCKER_ADDR=(-v "$DOCKER_HOST:$DOCKER_HOST" -e DOCKER_HOST)
 	else
-			DOCKER_ADDR=(-e DOCKER_HOST -e DOCKER_TLS_VERIFY -e DOCKER_CERT_PATH)
+			DOCKER_ADDR=(-e DOCKER_HOST -e DOCKER_TLS_VERIFY -e DOCKER_CERT_PATH -v "/certs/client:/certs/client")
 	fi
 
 	# We mount the current directory (the base of the repository) into the same location
@@ -119,7 +119,7 @@ if [ ${#COMPOSECMD[@]} -eq 0 ]; then
 
 	# COMPOSECMD is kept as an array to significantly simplify handling paths that contain
 	# spaces and other special characters.
-	COMPOSECMD=(docker run --rm "${DOCKER_ADDR[@]}" $COMPOSE_OPTIONS "${VOLUMES[@]}" -w "$(pwd)" $IMAGE docker compose)
+	COMPOSECMD=(docker run --rm "${DOCKER_ADDR[@]}" $COMPOSE_OPTIONS "${VOLUMES[@]}" --network host -w "$(pwd)" $IMAGE docker compose)
 fi
 
 # Parse command line arguments
