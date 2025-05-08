@@ -51,7 +51,6 @@ Request Structure
 :name:                        The :ref:`cache-group-name` of the :term:`Cache Group`
 :parentCachegroupId:          An optional field which, if present, should be an integer that is the :ref:`cache-group-id` of a :ref:`cache-group-parent` for this :term:`Cache Group`.
 :secondaryParentCachegroupId: An optional field which, if present, should be an integral, unique identifier for this :term:`Cache Group`'s secondary parent
-:shortName:                   An abbreviation of the ``name``
 :typeId:                      An integral, unique identifier for the :ref:`Cache Group's Type <cache-group-type>`
 
 	.. note:: The actual, integral, unique identifiers for these :term:`Types` must first be obtained, generally via :ref:`to-api-v3-types`.
@@ -73,7 +72,6 @@ Request Structure
 		"name": "test",
 		"fallbacks": [],
 		"fallbackToClosest": true,
-		"shortName": "test",
 		"typeId": 23,
 		"localizationMethods": ["GEO"]
 	}
@@ -92,7 +90,6 @@ Response Structure
 :parentCachegroupName:          A string containing the :ref:`cache-group-name` of this :term:`Cache Group`'s :ref:`cache-group-parent` - or ``null`` if it doesn't have a :ref:`cache-group-parent`
 :secondaryParentCachegroupId:   An integer that is the :ref:`cache-group-id` of this :term:`Cache Group`'s :ref:`cache-group-secondary-parent` - or ``null`` if it doesn't have a :ref:`cache-group-secondary-parent`
 :secondaryParentCachegroupName: A string containing the :ref:`cache-group-name` of this :term:`Cache Group`'s :ref:`cache-group-secondary-parent` :term:`Cache Group` - or ``null`` if it doesn't have a :ref:`cache-group-secondary-parent`
-:shortName:                     A string containing the :ref:`cache-group-short-name` of the :term:`Cache Group`
 :typeId:                        An integral, unique identifier for the ':term:`Type`' of the :term:`Cache Group`
 :typeName:                      A string that names the :ref:`cache-group-type` of this :term:`Cache Group`
 
@@ -120,7 +117,6 @@ Response Structure
 	"response": {
 		"id": 8,
 		"name": "test",
-		"shortName": "test",
 		"latitude": 0,
 		"longitude": 0,
 		"parentCachegroupName": null,

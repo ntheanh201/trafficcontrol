@@ -31,7 +31,6 @@ export const cachegroups = {
 				{
 					Description: "create a EDGE_LOC cachegroup with FailOver CacheGroup Field",
 					Name: "TP_Cache1",
-					ShortName: "TPC1",
 					Type: "EDGE_LOC",
 					Latitude: "0",
 					Longitude: "0",
@@ -43,7 +42,6 @@ export const cachegroups = {
 				{
 					Description: "create multiple EDGE_LOC cachegroup",
 					Name: "TP_Cache2",
-					ShortName: "TPC2",
 					Type: "EDGE_LOC",
 					Latitude: "0",
 					Longitude: "0",
@@ -55,7 +53,6 @@ export const cachegroups = {
 				{
 					Description: "create a MID_LOC cachegroup",
 					Name: "TP_Cache3",
-					ShortName: "TPC3",
 					Type: "MID_LOC",
 					Latitude: "0",
 					Longitude: "0",
@@ -116,7 +113,6 @@ export const cachegroups = {
 				{
 					Description: "create a CacheGroup",
 					Name: "TP_Cache1",
-					ShortName: "TPC1",
 					Type: "EDGE_LOC",
 					Latitude: "0",
 					Longitude: "0",
@@ -154,7 +150,6 @@ export const cachegroups = {
 				{
 					Description: "create a EDGE_LOC cachegroup with FailOver CacheGroup Field",
 					Name: "TP_Cache4",
-					ShortName: "TPC4",
 					Type: "EDGE_LOC",
 					Latitude: "0",
 					Longitude: "0",
@@ -166,7 +161,6 @@ export const cachegroups = {
 				{
 					Description: "create multiple EDGE_LOC cachegroup",
 					Name: "TP_Cache5",
-					ShortName: "TPC5",
 					Type: "EDGE_LOC",
 					Latitude: "0",
 					Longitude: "0",
@@ -178,7 +172,6 @@ export const cachegroups = {
 				{
 					Description: "create a MID_LOC cachegroup",
 					Name: "TP_Cache6",
-					ShortName: "TPC6",
 					Type: "MID_LOC",
 					Latitude: "0",
 					Longitude: "0",

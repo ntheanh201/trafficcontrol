@@ -27,13 +27,14 @@ import (
 	"testing"
 	"time"
 
+	"github.com/jmoiron/sqlx"
+
 	"github.com/apache/trafficcontrol/v8/lib/go-tc"
 	"github.com/apache/trafficcontrol/v8/lib/go-util"
 	"github.com/apache/trafficcontrol/v8/traffic_ops/traffic_ops_golang/api"
 	"github.com/apache/trafficcontrol/v8/traffic_ops/traffic_ops_golang/test"
-	"github.com/jmoiron/sqlx"
 
-	sqlmock "gopkg.in/DATA-DOG/go-sqlmock.v1"
+	"gopkg.in/DATA-DOG/go-sqlmock.v1"
 )
 
 func getTestCacheGroups() []tc.CacheGroup {
@@ -41,7 +42,6 @@ func getTestCacheGroups() []tc.CacheGroup {
 	testCG1 := tc.CacheGroup{
 		ID:                          1,
 		Name:                        "cachegroup1",
-		ShortName:                   "cg1",
 		Latitude:                    38.7,
 		Longitude:                   90.7,
 		ParentCachegroupID:          2,
@@ -65,7 +65,6 @@ func getTestCacheGroups() []tc.CacheGroup {
 	testCG2 := tc.CacheGroup{
 		ID:                          1,
 		Name:                        "parentCacheGroup",
-		ShortName:                   "pg1",
 		Latitude:                    38.7,
 		Longitude:                   90.7,
 		ParentCachegroupID:          1,
@@ -99,7 +98,6 @@ func TestReadCacheGroups(t *testing.T) {
 	rows := sqlmock.NewRows([]string{
 		"id",
 		"name",
-		"short_name",
 		"latitude",
 		"longitude",
 		"localization_methods",
@@ -118,7 +116,6 @@ func TestReadCacheGroups(t *testing.T) {
 		rows = rows.AddRow(
 			ts.ID,
 			ts.Name,
-			ts.ShortName,
 			ts.Latitude,
 			ts.Longitude,
 			[]byte("{DEEP_CZ,CZ,GEO}"),
@@ -207,10 +204,9 @@ func TestValidate(t *testing.T) {
 	tx := db.MustBegin()
 	reqInfo := api.Info{Tx: tx}
 
-	// invalid name, shortname, loattude, and longitude
+	// invalid name, loattude, and longitude
 	id := 1
 	nm := "not!a!valid!cachegroup"
-	sn := "not!a!valid!shortname"
 	la := -190.0
 	lo := -190.0
 	lm := []tc.LocalizationMethod{tc.LocalizationMethodGeo, tc.LocalizationMethodInvalid}
@@ -222,7 +218,6 @@ func TestValidate(t *testing.T) {
 		tc.CacheGroupNullable{
 			ID:                  &id,
 			Name:                &nm,
-			ShortName:           &sn,
 			Latitude:            &la,
 			Longitude:           &lo,
 			LocalizationMethods: &lm,
@@ -239,7 +234,6 @@ func TestValidate(t *testing.T) {
 		errors.New(`'localizationMethods' 'invalid' is not one of [CZ DEEP_CZ GEO]`),
 		errors.New(`'longitude' Must be a floating point number within the range +-180`),
 		errors.New(`'name' invalid characters found - Use alphanumeric . or - or _ .`),
-		errors.New(`'shortName' invalid characters found - Use alphanumeric . or - or _ .`),
 		errors.New(`'type' unable to check whether cachegroup not!a!valid!cachegroup is used in any topologies`),
 	})
 
@@ -253,9 +247,8 @@ func TestValidate(t *testing.T) {
 	rows = sqlmock.NewRows([]string{"id", "name"})
 	mock.ExpectQuery("SELECT\\s+t\\.id\\s+FROM\\s+cachegroup").WillReturnRows(rows)
 
-	//  valid name, shortName latitude, longitude
+	//  valid name, latitude, longitude
 	nm = "This.is.2.a-Valid---Cachegroup."
-	sn = `awesome-cachegroup`
 	la = 90.0
 	lo = 90.0
 	lm = []tc.LocalizationMethod{tc.LocalizationMethodGeo, tc.LocalizationMethodCZ, tc.LocalizationMethodDeepCZ}
@@ -264,7 +257,6 @@ func TestValidate(t *testing.T) {
 		tc.CacheGroupNullable{
 			ID:                  &id,
 			Name:                &nm,
-			ShortName:           &sn,
 			Latitude:            &la,
 			Longitude:           &lo,
 			LocalizationMethods: &lm,
@@ -297,7 +289,6 @@ func TestBadTypeParamCacheGroups(t *testing.T) {
 	rows := sqlmock.NewRows([]string{
 		"id",
 		"name",
-		"short_name",
 		"latitude",
 		"longitude",
 		"localization_methods",
@@ -316,7 +307,6 @@ func TestBadTypeParamCacheGroups(t *testing.T) {
 		rows = rows.AddRow(
 			ts.ID,
 			ts.Name,
-			ts.ShortName,
 			ts.Latitude,
 			ts.Longitude,
 			[]byte("{DEEP_CZ,CZ,GEO}"),

@@ -49,7 +49,6 @@ type CacheGroupDetailResponse struct {
 type CacheGroup struct {
 	ID                          int                  `json:"id" db:"id"`
 	Name                        string               `json:"name" db:"name"`
-	ShortName                   string               `json:"shortName" db:"short_name"`
 	Latitude                    float64              `json:"latitude" db:"latitude"`
 	Longitude                   float64              `json:"longitude" db:"longitude"`
 	ParentName                  string               `json:"parentCachegroupName" db:"parent_cachegroup_name"`
@@ -69,7 +68,6 @@ type CacheGroup struct {
 type CacheGroupNullable struct {
 	ID                          *int                  `json:"id" db:"id"`
 	Name                        *string               `json:"name" db:"name"`
-	ShortName                   *string               `json:"shortName" db:"short_name"`
 	Latitude                    *float64              `json:"latitude" db:"latitude"`
 	Longitude                   *float64              `json:"longitude" db:"longitude"`
 	ParentName                  *string               `json:"parentCachegroupName" db:"parent_cachegroup_name"`
@@ -122,7 +120,6 @@ type CacheGroupDetailResponseV50 struct {
 type CacheGroupV50 struct {
 	ID                          int                  `json:"id" db:"id"`
 	Name                        string               `json:"name" db:"name"`
-	ShortName                   string               `json:"shortName" db:"short_name"`
 	Latitude                    float64              `json:"latitude" db:"latitude"`
 	Longitude                   float64              `json:"longitude" db:"longitude"`
 	ParentName                  string               `json:"parentCachegroupName" db:"parent_cachegroup_name"`
@@ -142,7 +139,6 @@ type CacheGroupV50 struct {
 type CacheGroupNullableV50 struct {
 	ID                          *int                  `json:"id" db:"id"`
 	Name                        *string               `json:"name" db:"name"`
-	ShortName                   *string               `json:"shortName" db:"short_name"`
 	Latitude                    *float64              `json:"latitude" db:"latitude"`
 	Longitude                   *float64              `json:"longitude" db:"longitude"`
 	ParentName                  *string               `json:"parentCachegroupName" db:"parent_cachegroup_name"`

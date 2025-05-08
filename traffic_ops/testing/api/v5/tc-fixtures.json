@@ -18,42 +18,36 @@
             "latitude": 0,
             "longitude": 0,
             "name": "originCachegroup",
-            "shortName": "og1",
             "typeName": "ORG_LOC"
         },
         {
             "latitude": 0,
             "longitude": 0,
             "name": "multiOriginCachegroup",
-            "shortName": "mog1",
             "typeName": "ORG_LOC"
         },
         {
             "latitude": 0,
             "longitude": 0,
             "name": "parentCachegroup",
-            "shortName": "pg1",
             "typeName": "MID_LOC"
         },
         {
             "latitude": 0,
             "longitude": 0,
             "name": "parentCachegroup2",
-            "shortName": "pg2",
             "typeName": "MID_LOC"
         },
         {
             "latitude": 0,
             "longitude": 0,
             "name": "parentCachegroup3",
-            "shortName": "pg3",
             "typeName": "MID_LOC"
         },
         {
             "latitude": 0,
             "longitude": 0,
             "name": "secondaryCachegroup",
-            "shortName": "sg1",
             "typeName": "MID_LOC"
         },
         {
@@ -62,7 +56,6 @@
             "name": "cachegroup1",
             "parentCachegroupName": "parentCachegroup",
             "secondaryParentCachegroupName": "secondaryCachegroup",
-            "shortName": "cg1",
             "localizationMethods": [
                 "CZ",
                 "DEEP_CZ",
@@ -76,7 +69,6 @@
             "name": "fallback1",
             "parentCachegroupName": "parentCachegroup",
             "secondaryParentCachegroupName": "secondaryCachegroup",
-            "shortName": "fb1",
             "localizationMethods": [
                 "CZ",
                 "DEEP_CZ",
@@ -90,7 +82,6 @@
             "name": "fallback2",
             "parentCachegroupName": "parentCachegroup",
             "secondaryParentCachegroupName": "secondaryCachegroup",
-            "shortName": "fb2",
             "localizationMethods": [
                 "CZ",
                 "DEEP_CZ",
@@ -104,7 +95,6 @@
             "name": "fallback3",
             "parentCachegroupName": "parentCachegroup",
             "secondaryParentCachegroupName": "secondaryCachegroup",
-            "shortName": "fb3",
             "localizationMethods": [
                 "CZ",
                 "DEEP_CZ",
@@ -118,7 +108,6 @@
             "name": "cachegroup2",
             "parentCachegroupName": "secondaryCachegroup",
             "secondaryParentCachegroupName": "parentCachegroup",
-            "shortName": "cg2",
             "typeName": "EDGE_LOC",
             "fallbacks": [
                 "fallback1",
@@ -131,7 +120,6 @@
             "longitude": 0,
             "name": "cachegroup4",
             "parentCachegroupName": "parentCachegroup3",
-            "shortName": "cg4",
             "localizationMethods": [
                 "CZ",
                 "DEEP_CZ",
@@ -145,14 +133,12 @@
             "name": "cachegroup3",
             "parentCachegroupName": "parentCachegroup",
             "secondaryParentCachegroupName": "secondaryCachegroup",
-            "shortName": "cg3",
             "typeName": "EDGE_LOC"
         },
         {
             "latitude": 0,
             "longitude": 0,
             "name": "edge-parent1",
-            "shortName": "ep1",
             "typeName": "EDGE_LOC"
         },
         {
@@ -160,108 +146,92 @@
             "longitude": 0,
             "name": "has-edge-parent1",
             "parentCachegroupName": "edge-parent1",
-            "shortName": "hep1",
             "typeName": "EDGE_LOC"
         },
         {
             "latitude": 0,
             "longitude": 0,
             "name": "topology-edge-cg-01",
-            "shortName": "te1",
             "typeName": "EDGE_LOC"
         },
         {
             "latitude": 0,
             "longitude": 0,
             "name": "topology-edge-cg-02",
-            "shortName": "te2",
             "typeName": "EDGE_LOC"
         },
         {
             "latitude": 0,
             "longitude": 0,
             "name": "topology-mid-cg-01",
-            "shortName": "tm1",
             "typeName": "MID_LOC"
         },
         {
             "latitude": 0,
             "longitude": 0,
             "name": "topology-mid-cg-02",
-            "shortName": "tm2",
             "typeName": "MID_LOC"
         },
         {
             "latitude": 0,
             "longitude": 0,
             "name": "topology-mid-cg-03",
-            "shortName": "tm3",
             "typeName": "MID_LOC"
         },
         {
             "latitude": 0,
             "longitude": 0,
             "name": "topology-mid-cg-04",
-            "shortName": "tm4",
             "typeName": "MID_LOC"
         },
         {
             "latitude": 0,
             "longitude": 0,
             "name": "topology-mid-cg-05",
-            "shortName": "tm5",
             "typeName": "MID_LOC"
         },
         {
             "latitude": 0,
             "longitude": 0,
             "name": "topology-mid-cg-06",
-            "shortName": "tm6",
             "typeName": "MID_LOC"
         },
         {
             "latitude": 0,
             "longitude": 0,
             "name": "topology-mid-cg-07",
-            "shortName": "tm7",
             "typeName": "MID_LOC"
         },
         {
             "latitude": 0,
             "longitude": 0,
             "name": "dtrc1",
-            "shortName": "dtrc1",
             "typeName": "MID_LOC"
         },
         {
             "latitude": 0,
             "longitude": 0,
             "name": "dtrc2",
-            "shortName": "dtrc2",
             "typeName": "EDGE_LOC"
         },
         {
             "latitude": 0,
             "longitude": 0,
             "name": "dtrc3",
-            "shortName": "dtrc3",
             "typeName": "EDGE_LOC"
         },
         {
             "latitude": 0,
             "longitude": 0,
             "name": "cdn1-only",
-            "shortName": "cdn1-only",
             "typeName": "EDGE_LOC"
         },
         {
             "name": "nullLatLongCG",
-            "shortName": "null-ll",
             "typeName": "EDGE_LOC"
         },
         {
             "name": "noServers",
-            "shortName": "noServers",
             "typeName": "EDGE_LOC"
         }
     ],

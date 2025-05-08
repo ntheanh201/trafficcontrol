@@ -59,7 +59,6 @@ func Downgrade(cgV5 tc.CacheGroupNullableV5) TOCacheGroup {
 	var cg TOCacheGroup
 	cg.ID = util.CopyIfNotNil(cgV5.ID)
 	cg.Name = util.CopyIfNotNil(cgV5.Name)
-	cg.ShortName = util.CopyIfNotNil(cgV5.ShortName)
 	cg.Latitude = util.CopyIfNotNil(cgV5.Latitude)
 	cg.Longitude = util.CopyIfNotNil(cgV5.Longitude)
 	cg.ParentName = util.CopyIfNotNil(cgV5.ParentName)
@@ -83,7 +82,6 @@ func (cg TOCacheGroup) Upgrade() (tc.CacheGroupNullableV5, error) {
 	var cgV5 tc.CacheGroupNullableV5
 	cgV5.ID = util.CopyIfNotNil(cg.ID)
 	cgV5.Name = util.CopyIfNotNil(cg.Name)
-	cgV5.ShortName = util.CopyIfNotNil(cg.ShortName)
 	cgV5.Latitude = util.CopyIfNotNil(cg.Latitude)
 	cgV5.Longitude = util.CopyIfNotNil(cg.Longitude)
 	cgV5.ParentName = util.CopyIfNotNil(cg.ParentName)
@@ -336,12 +334,10 @@ func (cg TOCacheGroup) Validate() (error, error) {
 	}
 
 	validName := validation.NewStringRule(IsValidCacheGroupName, "invalid characters found - Use alphanumeric . or - or _ .")
-	validShortName := validation.NewStringRule(IsValidCacheGroupName, "invalid characters found - Use alphanumeric . or - or _ .")
 	latitudeErr := "Must be a floating point number within the range +-90"
 	longitudeErr := "Must be a floating point number within the range +-180"
 	errs := validation.Errors{
 		"name":                        validation.Validate(cg.Name, validation.Required, validName),
-		"shortName":                   validation.Validate(cg.ShortName, validation.Required, validShortName),
 		"latitude":                    validation.Validate(cg.Latitude, validation.Min(-90.0).Error(latitudeErr), validation.Max(90.0).Error(latitudeErr)),
 		"longitude":                   validation.Validate(cg.Longitude, validation.Min(-180.0).Error(longitudeErr), validation.Max(180.0).Error(longitudeErr)),
 		"parentCacheGroupID":          validation.Validate(cg.ParentCachegroupID, validation.Min(1)),
@@ -379,7 +375,6 @@ func (cg *TOCacheGroup) Create() (error, error, int) {
 	err := cg.ReqInfo.Tx.Tx.QueryRow(
 		InsertQuery(),
 		cg.Name,
-		cg.ShortName,
 		cg.TypeID,
 		cg.ParentCachegroupID,
 		cg.SecondaryParentCachegroupID,
@@ -588,7 +583,6 @@ func GetCacheGroupsByName(names []string, Tx *sqlx.Tx) (map[string]tc.CacheGroup
 		if err = rows.Scan(
 			&s.ID,
 			&s.Name,
-			&s.ShortName,
 			&s.Latitude,
 			&s.Longitude,
 			pq.Array(&lms),
@@ -618,11 +612,10 @@ func (cg *TOCacheGroup) Read(h http.Header, useIMS bool) ([]interface{}, error, 
 	// Query Parameters to Database Query column mappings
 	// see the fields mapped in the SQL query
 	queryParamsToQueryCols := map[string]dbhelpers.WhereColumnInfo{
-		"id":        {Column: "cachegroup.id", Checker: api.IsInt},
-		"name":      {Column: "cachegroup.name"},
-		"shortName": {Column: "cachegroup.short_name"},
-		"type":      {Column: "cachegroup.type"},
-		"topology":  {Column: "topology_cachegroup.topology"},
+		"id":       {Column: "cachegroup.id", Checker: api.IsInt},
+		"name":     {Column: "cachegroup.name"},
+		"type":     {Column: "cachegroup.type"},
+		"topology": {Column: "topology_cachegroup.topology"},
 	}
 	where, orderBy, pagination, queryValues, errs := dbhelpers.BuildWhereAndOrderByAndPagination(cg.ReqInfo.Params, queryParamsToQueryCols)
 	if len(errs) > 0 {
@@ -666,7 +659,6 @@ LEFT JOIN topology_cachegroup ON cachegroup.name = topology_cachegroup.cachegrou
 		if err = rows.Scan(
 			&s.ID,
 			&s.Name,
-			&s.ShortName,
 			&s.Latitude,
 			&s.Longitude,
 			pq.Array(&lms),
@@ -746,7 +738,6 @@ func (cg *TOCacheGroup) Update(h http.Header) (error, error, int) {
 	err := cg.ReqInfo.Tx.Tx.QueryRow(
 		UpdateQuery(),
 		cg.Name,
-		cg.ShortName,
 		coordinateID,
 		cg.ParentCachegroupID,
 		cg.SecondaryParentCachegroupID,
@@ -879,7 +870,6 @@ func (cg *TOCacheGroup) Delete() (error, error, int) {
 func InsertQuery() string {
 	return `INSERT INTO cachegroup (
 name,
-short_name,
 type,
 parent_cachegroup_id,
 secondary_parent_cachegroup_id,
@@ -902,7 +892,6 @@ func SelectQuery() string {
 	return `SELECT
 cachegroup.id,
 cachegroup.name,
-cachegroup.short_name,
 coordinate.latitude,
 coordinate.longitude,
 (SELECT COALESCE(array_agg(CAST(method as text)), '{}') AS localization_methods FROM cachegroup_localization_method clm WHERE clm.cachegroup = cachegroup.id),
@@ -937,13 +926,12 @@ func UpdateQuery() string {
 	return `UPDATE
 cachegroup SET
 name=$1,
-short_name=$2,
-coordinate=$3,
-parent_cachegroup_id=$4,
-secondary_parent_cachegroup_id=$5,
-type=$6,
-fallback_to_closest=$7
-WHERE id=$8
+coordinate=$2,
+parent_cachegroup_id=$3,
+secondary_parent_cachegroup_id=$4,
+type=$5,
+fallback_to_closest=$6
+WHERE id=$7
 RETURNING
 (SELECT name FROM type WHERE cachegroup.type = type.id),
 (SELECT name FROM cachegroup parent
@@ -1014,11 +1002,10 @@ func getCacheGroup(tx *sqlx.Tx, params map[string]string, useIMS bool, header ht
 
 	// Query Parameters to Database Query column mappings
 	queryParamsToQueryCols := map[string]dbhelpers.WhereColumnInfo{
-		"id":        {Column: "cachegroup.id", Checker: api.IsInt},
-		"name":      {Column: "cachegroup.name"},
-		"shortName": {Column: "cachegroup.short_name"},
-		"type":      {Column: "cachegroup.type"},
-		"topology":  {Column: "topology_cachegroup.topology"},
+		"id":       {Column: "cachegroup.id", Checker: api.IsInt},
+		"name":     {Column: "cachegroup.name"},
+		"type":     {Column: "cachegroup.type"},
+		"topology": {Column: "topology_cachegroup.topology"},
 	}
 	if _, ok := params["orderby"]; !ok {
 		params["orderby"] = "name"
@@ -1066,7 +1053,6 @@ func getCacheGroup(tx *sqlx.Tx, params map[string]string, useIMS bool, header ht
 		if err = rows.Scan(
 			&cg.ID,
 			&cg.Name,
-			&cg.ShortName,
 			&cg.Latitude,
 			&cg.Longitude,
 			pq.Array(&lms),
@@ -1124,7 +1110,6 @@ func CreateCacheGroup(w http.ResponseWriter, r *http.Request) {
 	err = tx.QueryRow(
 		query,
 		cg.Name,
-		cg.ShortName,
 		cg.TypeID,
 		cg.ParentCachegroupID,
 		cg.SecondaryParentCachegroupID,
@@ -1295,7 +1280,6 @@ func UpdateCacheGroup(w http.ResponseWriter, r *http.Request) {
 	err = tx.QueryRow(
 		query,
 		dgCg.Name,
-		dgCg.ShortName,
 		coordinateID,
 		dgCg.ParentCachegroupID,
 		dgCg.SecondaryParentCachegroupID,
@@ -1447,7 +1431,6 @@ func readAndValidateJsonStruct(r *http.Request) (tc.CacheGroupNullableV5, error)
 	longitudeErr := "Must be a floating point number within the range +-180"
 	errs := tovalidate.ToErrors(validation.Errors{
 		"name":                        validation.Validate(cg.Name, validation.Required, rule),
-		"shortName":                   validation.Validate(cg.ShortName, validation.Required, rule),
 		"latitude":                    validation.Validate(cg.Latitude, validation.Min(-90.0).Error(latitudeErr), validation.Max(90.0).Error(latitudeErr)),
 		"longitude":                   validation.Validate(cg.Longitude, validation.Min(-180.0).Error(longitudeErr), validation.Max(180.0).Error(longitudeErr)),
 		"parentCacheGroupID":          validation.Validate(cg.ParentCachegroupID, validation.Min(1)),

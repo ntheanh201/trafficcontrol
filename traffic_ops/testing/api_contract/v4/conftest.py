@@ -712,10 +712,6 @@ def cache_group_data_post(to_session: TOSession, request_template_data: list[JSO
 		cache_group_name = name[:4] + randstr
 		cache_group["name"] = generate_unique_data(to_session=to_session, base_name=cache_group_name,
 					     object_type="cachegroups")
-		short_name = cache_group["shortName"]
-		if not isinstance(short_name, str):
-			raise TypeError(f"shortName must be str, not '{type(short_name)}")
-		cache_group["shortName"] = short_name[:5] + randstr
 	except KeyError as e:
 		raise TypeError(f"missing Cache group property '{e.args[0]}'") from e
 

@@ -411,7 +411,6 @@ ALTER SEQUENCE async_status_id_seq OWNED BY async_status.id;
 CREATE TABLE IF NOT EXISTS cachegroup (
     id bigint,
     name text NOT NULL,
-    short_name text NOT NULL,
     parent_cachegroup_id bigint,
     secondary_parent_cachegroup_id bigint,
     type bigint NOT NULL,
@@ -2055,14 +2054,6 @@ IF EXISTS (SELECT FROM information_schema.columns WHERE table_name = 'cachegroup
     --
 
     CREATE UNIQUE INDEX IF NOT EXISTS idx_89476_cg_name_unique ON cachegroup USING btree (name);
-END IF;
-
-IF EXISTS (SELECT FROM information_schema.columns WHERE table_name = 'cachegroup' AND column_name = 'short_name') THEN
-    --
-    -- Name: idx_89476_cg_short_unique; Type: INDEX; Schema: public; Owner: traffic_ops
-    --
-
-    CREATE UNIQUE INDEX IF NOT EXISTS idx_89476_cg_short_unique ON cachegroup USING btree (short_name);
 END IF;
 
 IF EXISTS (SELECT FROM information_schema.columns WHERE table_name = 'cachegroup' AND column_name = 'parent_cachegroup_id') THEN
